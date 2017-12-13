@@ -1,0 +1,41 @@
+<response>
+signup
+login
+logout
+post_message
+{
+  'status'  : false,  // 失敗
+  'message' : 'Wrong user name or password.'
+}
+
+<response>
+get_messages
+{
+  'status'   : true,  // 成功
+  'messages' : [
+    'Hello, world.',
+    'Hogehoge',
+    'Aieeeee'
+  ]
+}
+
+<post>
+signup
+{
+  'user_name' : 'tana',
+  'password'  : 'some_password',
+  'password_confirmation' : 'some_password'
+}
+
+<post>
+login
+{
+  'user_name' : 'tana',
+  'password'  : 'some_password'
+}
+
+<post>
+post_message
+{
+  
+}

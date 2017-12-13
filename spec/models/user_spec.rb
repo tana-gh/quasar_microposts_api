@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   
-  let(:user) { build(:user) }
+  let(:user) { build :user }
   
   it '正常系' do
     expect(user.save).to be_truthy
