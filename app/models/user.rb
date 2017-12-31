@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_one  :user_session
   has_many :micropst
   validates :name, presence: true,
                    length: { maximum: 60 },
