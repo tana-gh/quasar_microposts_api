@@ -1,5 +1,7 @@
 class UserApiController < ApplicationController
-
+  
+  before_action :authenticate, except: [:signup, :login]
+  
   def signup
     user_name = params[:user_name]
     password  = params[:password]

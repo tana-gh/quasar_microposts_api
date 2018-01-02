@@ -1,5 +1,7 @@
 class ApiController < ApplicationController
   
+  before_action :authenticate
+  
   def get_messages
     user = User.find_by_id(load_session)
     
@@ -8,8 +10,6 @@ class ApiController < ApplicationController
   end
   
   def post_message
-    user = User.find_by_id(load_session)
-    
-    
+    # TODO
   end
 end

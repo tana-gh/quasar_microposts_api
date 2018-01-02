@@ -37,6 +37,7 @@ group :development, :test do
   # Added by tana
   gem 'rspec-rails'
   gem 'factory_bot_rails'
+  gem 'timecop'
 end
 
 group :development do

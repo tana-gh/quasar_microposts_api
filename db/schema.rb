@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171231060649) do
+ActiveRecord::Schema.define(version: 20180102095339) do
 
   create_table "microposts", force: :cascade do |t|
     t.string "message"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20171231060649) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "expires"
     t.index ["token"], name: "index_user_sessions_on_token", unique: true
   end
 
