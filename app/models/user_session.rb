@@ -14,4 +14,8 @@ class UserSession < ApplicationRecord
   def is_in_expires
     DateTime.now <= self.expires
   end
+  
+  def delete_session
+    self.expires = DateTime.now - 1
+  end
 end

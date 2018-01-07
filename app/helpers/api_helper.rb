@@ -2,21 +2,28 @@ module ApiHelper
   
   private
   
-  def update_render_message(status = true, message = '')
-    @status  = status
-    @message = message
+  def render_token(status, json_status, token)
+    @status = json_status
+    @token  = token
+    render 'token', formats: 'json', handlars: 'jbuilder', status: status
   end
   
-  def update_render_messages(status = true, messages = [])
-    @status   = status
-    @messages = messages
+  def render_status(status, json_status, message)
+    @status  = json_status
+    @message = message
+    render 'status', formats: 'json', handlars: 'jbuilder', status: status
+  end
+  
+  def render_microposts(status, json_status, microposts)
+    @status     = json_status
+    @microposts = microposts
+    render 'microposts', formats: 'json', handlars: 'jbuilder', status: status
   end
   
   def authenticate
-    @user = authenticate_user
-    if @user.nil?
-      update_render_message false, 'Failed to authenticate.'
-      render 'status', formats: 'json', handlers: 'jbuilder'
+    @user_session = authenticate_user
+    if @user_session.nil?
+      render_status(401, false, 'Failed to authenticate.')
     end
   end
   

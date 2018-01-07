@@ -1,7 +1,18 @@
 <response>
-signup
-login
+signup  // 成功時
+login   // 成功時
+{
+  'status' : true,
+  'token'  : 'XXXXXXXXXXXXXXX'
+}
+
+-> HTTPヘッダに'Authorization: Token XXXXXXXXXXXXXXX'
+
+<response>
+signup  // 失敗時
+login   // 失敗時
 logout
+is_login
 post_message
 {
   'status'  : false,  // 失敗
@@ -9,10 +20,10 @@ post_message
 }
 
 <response>
-get_messages
+get_microposts
 {
-  'status'   : true,  // 成功
-  'messages' : [
+  'status'     : true,  // 成功
+  'microposts' : [
     'Hello, world.',
     'Hogehoge',
     'Aieeeee'
@@ -37,5 +48,5 @@ login
 <post>
 post_message
 {
-  
+  'micropost' : 'some_message'
 }

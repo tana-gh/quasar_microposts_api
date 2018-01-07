@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe UserSession, type: :model do
   
   let(:us) { build :user_session }
+  let(:dt) { DateTime.new(2000, 1, 1, 0, 0, 0) }
   
   it '正常系' do
     expect(us.save).to be_truthy
@@ -30,7 +31,6 @@ RSpec.describe UserSession, type: :model do
   end
   
   it 'set_new_tokenのテスト' do
-    dt = DateTime.new(2000, 1, 1, 0, 0, 0)
     Timecop.freeze(dt) do
       us.set_new_token
     end
@@ -40,10 +40,20 @@ RSpec.describe UserSession, type: :model do
   end
   
   it 'is_in_expiresのテスト' do
-    dt = DateTime.new(2000, 1, 1, 0, 0, 0)
     us.expires = dt
+    Timecop.freeze(dt) do
+      expect(us.is_in_expires).to be_truthy
+    end
     Timecop.freeze(dt + UserSession::EXPIRES_OFFSET + 1) do
       expect(us.is_in_expires).to be_falsy
+    end
+  end
+  
+  it 'delete_sessionのテスト' do
+    Timecop.freeze(dt) do
+      us.set_new_token
+      us.delete_session
+      expect(us.expires).to be < DateTime.now
     end
   end
 end

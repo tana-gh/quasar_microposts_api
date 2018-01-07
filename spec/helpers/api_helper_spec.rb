@@ -12,16 +12,4 @@ require 'rails_helper'
 # end
 RSpec.describe ApiHelper, type: :helper do
   
-  it 'update_render_messageのテスト' do
-    update_render_message(false, 'test')
-    expect(@status) .to be_falsy
-    expect(@message).to eq('test')
-  end
-  
-  it 'update_render_messagesのテスト' do
-    update_render_messages(false, ['test1', 'test2'])
-    expect(@status).to be_falsy
-    expect(@messages.count).to eq(2)
-    expect(@messages[0]).to    eq('test1')
-  end
 end

@@ -24,89 +24,106 @@ RSpec.describe UserApiController, type: :controller do
     { 'user_name' => 'test', 'password' => 'password' }
   end
   
-  def post_and_validate_response(api, params, status, message, cookie_user_id)
-    post api, xhr: true, params: params
-    expect(response).to be_success
-    
-    body = JSON.parse(response.body)
-    switch_expect body['status'],    status
-    switch_expect body['message'],   message
-    switch_expect cookies[:user_id], cookie_user_id
-  end
-  
-  def switch_expect(target, hash)
-    if hash.has_key?(:to)
-      expect(target).to hash[:to]
-    elsif hash.has_key?(:to_not)
-      expect(target).to_not hash[:to_not]
-    end
+  let(:login_failure_params) do
+    { 'user_name' => '', 'password' => 'password' }
   end
   
   it 'サインアップのテスト' do
-    post_and_validate_response :signup,
-                               signup_params,
-                               { to: be_truthy },
-                               { to: be_empty },
-                               { to: eq(2) }
+    post :signup, xhr: true, params: signup_params
+    expect(response.status).to eq(200)
+    body = JSON.parse(response.body)
+    expect(body['status']).to be_truthy
+    expect(body['token']) .to eq(User.find_by(name: 'signup').user_session.token)
   end
   
   it 'サインアップ失敗のテスト' do
-    post_and_validate_response :signup,
-                               signup_failure_params,
-                               { to:     be_falsy },
-                               { to_not: be_empty },
-                               { to:     be_nil }
+    post :signup, xhr: true, params: signup_failure_params
+    expect(response.status).to eq(401)
+    body = JSON.parse(response.body)
+    expect(body['status']) .to be_falsy
+    expect(body['message']).to be_present
   end
   
   it 'ログインのテスト' do
-    post_and_validate_response :login,
-                               login_params,
-                               { to: be_truthy },
-                               { to: be_empty },
-                               { to: eq(1) }
+    post :login, xhr: true, params: login_params
+    expect(response.status).to eq(200)
+    body = JSON.parse(response.body)
+    expect(body['status']).to be_truthy
+    expect(body['token']) .to eq(User.find_by(name: 'test').user_session.token)
+  end
+  
+  it 'ログイン失敗のテスト' do
+    post :login, xhr: true, params: login_failure_params
+    expect(response.status).to eq(401)
+    body = JSON.parse(response.body)
+    expect(body['status']) .to be_falsy
+    expect(body['message']).to be_present
   end
   
   it 'ログアウトのテスト' do
-    post_and_validate_response :logout,
-                               {},
-                               { to:     be_falsy },
-                               { to_not: be_empty },
-                               { to:     be_nil }
+    post :logout, xhr: true, params: {}
+    expect(response.status).to eq(401)
+    body = JSON.parse(response.body)
+    expect(body['status']) .to be_falsy
+    expect(body['message']).to be_present
   end
   
   it 'ログインログアウトのテスト' do
-    post_and_validate_response :login,
-                               login_params,
-                               { to: be_truthy },
-                               { to: be_empty },
-                               { to: eq(1) }
-                               
-    post_and_validate_response :logout,
-                               {},
-                               { to: be_truthy },
-                               { to: be_empty },
-                               { to: be_nil }
+    post :login, xhr: true, params: login_params
+    expect(response.status).to eq(200)
+    body = JSON.parse(response.body)
+    token = User.find_by(name: 'test').user_session.token
+    expect(body['token']).to eq(token)
+    
+    request.headers['Authorization'] = "Token #{token}"
+    post :logout, xhr: true,  params: {}
+    expect(response.status).to eq(200)
+    body = JSON.parse(response.body)
+    expect(body['status']) .to be_truthy
+    expect(body['message']).to be_present
   end
   
   it 'is_loginのテスト' do
-    post_and_validate_response :is_login,
-                               {},
-                               { to:     be_falsy },
-                               { to_not: be_empty },
-                               {}
+    post :is_login, xhr: true, params: {}
+    expect(response.status).to eq(401)
+    body = JSON.parse(response.body)
+    expect(body['status']) .to be_falsy
+    expect(body['message']).to be_present
   end
   
   it 'ログイン後is_loginのテスト' do
-    post_and_validate_response :login,
-                               login_params,
-                               { to: be_truthy },
-                               { to: be_empty },
-                               { to: eq(1) }
+    post :login, xhr: true, params: login_params
+    expect(response.status).to eq(200)
+    body = JSON.parse(response.body)
+    token = User.find_by(name: 'test').user_session.token
+    expect(body['token']).to eq(token)
     
-    post_and_validate_response :is_login,
-                               {},
-                               { to: be_truthy },
-                               { to: be_empty },
-                               {}
+    request.headers['Authorization'] = "Token #{token}"
+    post :is_login, xhr: true, params: {}
+    expect(response.status).to eq(200)
+    body = JSON.parse(response.body)
+    expect(body['status']) .to be_truthy
+    expect(body['message']).to be_present
+  end
+  
+  it 'ログインログアウト後is_loginのテスト' do
+    post :login, xhr: true, params: login_params
+    expect(response.status).to eq(200)
+    body = JSON.parse(response.body)
+    token = User.find_by(name: 'test').user_session.token
+    expect(body['token']).to eq(token)
+    
+    request.headers['Authorization'] = "Token #{token}"
+    post :logout, xhr: true,  params: {}
+    expect(response.status).to eq(200)
+    body = JSON.parse(response.body)
+    expect(body['message']).to be_present
+    
+    request.headers['Authorization'] = "Token #{token}"
+    post :is_login, xhr: true, params: {}
+    expect(response.status).to eq(200)
+    body = JSON.parse(response.body)
+    expect(body['status']) .to be_falsy
+    expect(body['message']).to be_present
   end
 end

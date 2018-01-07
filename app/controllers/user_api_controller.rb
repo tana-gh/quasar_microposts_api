@@ -12,13 +12,14 @@ class UserApiController < ApplicationController
                     password_confirmation: password_confirmation)
     
     if user.save
-      save_session(user.id)
-      update_render_message
+      if save_new_session(user)
+        render_token(200, true, user.user_session.token)
+      else
+        render_status(401, false, 'Cannot create session.')
+      end
     else
-      update_render_message false, 'Cannot signup.'
+      render_status(401, false, 'Cannot signup.')
     end
-    
-    render 'status', formats: 'json', handlars: 'jbuilder'
   end
   
   def login
@@ -28,33 +29,46 @@ class UserApiController < ApplicationController
     user = User.find_by(name: user_name)
     
     if user && user.authenticate(password)
-      save_session(user.id)
-      update_render_message
+      if save_new_session(user)
+        render_token(200, true, user.user_session.token)
+      else
+        render_status(401, false, 'Cannot create session.')
+      end
     else
-      update_render_message false, 'Wrong user name or password.'
+      render_status(401, false, 'Wrong user name or password.')
     end
-    
-    render 'status', formats: 'json', handlars: 'jbuilder'
   end
   
   def logout
-    if !load_session.blank?
-      delete_session
-      update_render_message
+    if @user_session.is_in_expires
+      @user_session.delete_session
+      @user_session.save
+      render_status(200, true, 'Logouted.')
     else
-      update_render_message false, 'Not Logined.'
+      render_status(401, false, 'Not logined.')
     end
-    
-    render 'status', formats: 'json', handlars: 'jbuilder'
   end
   
   def is_login
-    if !load_session.blank?
-      update_render_message
+    if @user_session.is_in_expires
+      render_status(200, true, 'Logined.')
     else
-      update_render_message false, 'Not Logined.'
+      render_status(200, false, 'Not logined.')
     end
-    
-    render 'status', formats: 'json', handlars: 'jbuilder'
+  end
+  
+  private
+  
+  def save_new_session(user)
+    us = get_user_session(user)
+    us.set_new_token
+    us.save
+  end
+  
+  def get_user_session(user)
+    us = user.user_session
+    if us.nil?
+      UserSession.new(user: user)
+    end
   end
 end
