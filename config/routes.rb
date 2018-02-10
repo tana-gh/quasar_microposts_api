@@ -5,4 +5,6 @@ Rails.application.routes.draw do
   post '/api/is_login', to: 'user_api#is_login'
   post '/api/get_microposts', to: 'api#get_microposts'
   post '/api/post_micropost', to: 'api#post_micropost'
+
+  match '*path' => 'options_request#preflight', via: :options
 end
