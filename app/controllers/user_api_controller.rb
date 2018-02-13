@@ -1,5 +1,3 @@
-require 'pry'
-
 class UserApiController < ApplicationController
   
   before_action :authenticate, except: [:signup, :login]
@@ -27,7 +25,7 @@ class UserApiController < ApplicationController
   def login
     user_name = params[:user_name]
     password  = params[:password]
-    binding.pry
+
     user = User.find_by(name: user_name)
     
     if user && user.authenticate(password)
