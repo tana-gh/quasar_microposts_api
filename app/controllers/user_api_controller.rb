@@ -66,10 +66,6 @@ class UserApiController < ApplicationController
   end
   
   def get_user_session(user)
-    us = user.user_session
-    if us.nil?
-      UserSession.new(user: user)
-    end
-    us
+    user.user_session || UserSession.new(user: user)
   end
 end
