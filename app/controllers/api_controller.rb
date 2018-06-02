@@ -7,7 +7,24 @@ class ApiController < ApplicationController
   end
 
   def get_microposts
-    render_microposts(200, true, Micropost.where(user: @user_session.user))  # TODO 今は自分のMicropostのみ
+    index = params[:index].to_i
+    count = params[:count].to_i
+
+    if !index    ||
+       !count    ||
+       index < 0 ||
+       count < 0
+      render_status(400, false, 'Invalid params.')
+      return
+    end
+
+    users = @user_session.user.followees.to_a << @user_session.user
+
+    mps = Micropost.all.where(user: users)
+                       .drop(index)
+                       .take(count)
+
+    render_microposts(200, true, mps)
   end
   
   def post_micropost

@@ -23,12 +23,12 @@ RSpec.describe ApiController, type: :controller do
 
   it 'get_micropostsのテスト' do
     request.headers['Authorization'] = "Token #{UserSession.first.token}"
-    post :get_microposts, xhr: true, params: {}
+    post :get_microposts, xhr: true, params: { index: 2, count: 5 }
     expect(response.status).to eq(200)
     
     body = JSON.parse(response.body)
     expect(body['status']).to be_truthy
-    expect(body['microposts'].length).to eq(10)
+    expect(body['microposts'].length).to eq(5)
   end
   
   it 'post_micropostのテスト' do
