@@ -11,14 +11,15 @@ class UserApiController < ApplicationController
                     password: password,
                     password_confirmation: password_confirmation)
     
-    if user.save
-      if save_new_session(user)
-        render_token(200, true, user.user_session.token)
-      else
-        render_status(401, false, 'Cannot create session.')
-      end
-    else
+    if !user.save
       render_status(401, false, 'Cannot signup.')
+      return
+    end
+
+    if save_new_session(user)
+      render_token(200, true, user.user_session.token)
+    else
+      render_status(401, false, 'Cannot create session.')
     end
   end
   
@@ -28,14 +29,15 @@ class UserApiController < ApplicationController
 
     user = User.find_by(name: user_name)
     
-    if user && user.authenticate(password)
-      if save_new_session(user)
-        render_token(200, true, user.user_session.token)
-      else
-        render_status(401, false, 'Cannot create session.')
-      end
-    else
+    if !user || !user.authenticate(password)
       render_status(401, false, 'Wrong user name or password.')
+      return
+    end
+
+    if save_new_session(user)
+      render_token(200, true, user.user_session.token)
+    else
+      render_status(401, false, 'Cannot create session.')
     end
   end
   

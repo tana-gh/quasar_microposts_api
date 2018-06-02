@@ -13,6 +13,12 @@ module ApiHelper
     @message = message
     render 'status', formats: 'json', handlars: 'jbuilder', status: status
   end
+
+  def render_users(status, json_status, users)
+    @status = json_status
+    @users  = users
+    render 'users', formats: 'json', handlars: 'jbuilder', status: status
+  end
   
   def render_microposts(status, json_status, microposts)
     @status     = json_status

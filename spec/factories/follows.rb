@@ -5,7 +5,7 @@ FactoryBot.define do
   end
 
   factory :follows, class: Follow do
-    sequence(:followee) { User.first || build(:users) }
+    sequence(:followee) { User.first || FactoryBot.create(:users) }
     association :follower, factory: :users
   end
 end

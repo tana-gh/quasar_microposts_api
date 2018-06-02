@@ -2,6 +2,10 @@ class ApiController < ApplicationController
   
   before_action :authenticate
   
+  def get_users
+    render_users(200, true, User.all)
+  end
+
   def get_microposts
     render_microposts(200, true, Micropost.where(user: @user_session.user))  # TODO 今は自分のMicropostのみ
   end

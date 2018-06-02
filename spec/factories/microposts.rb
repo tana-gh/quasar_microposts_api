@@ -6,6 +6,6 @@ FactoryBot.define do
   
   factory :microposts, class: Micropost do
     sequence(:message) { |n| "test_#{n}" }
-    sequence(:user)    { User.first || build(:user) }
+    sequence(:user)    { User.first || FactoryBot.create(:users) }
   end
 end

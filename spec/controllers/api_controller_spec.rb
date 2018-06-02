@@ -6,10 +6,21 @@ RSpec.describe ApiController, type: :controller do
   render_views
   
   before do
-    create :user_session
+    create      :user_session
+    create_list :users     , 10
     create_list :microposts, 10
   end
   
+  it 'get_usersのテスト' do
+    request.headers['Authorization'] = "Token #{UserSession.first.token}"
+    post :get_users, xhr: true, params: {}
+    expect(response.status).to eq(200)
+
+    body = JSON.parse(response.body)
+    expect(body['status']).to be_truthy
+    expect(body['users'].length).to eq(11)
+  end
+
   it 'get_micropostsのテスト' do
     request.headers['Authorization'] = "Token #{UserSession.first.token}"
     post :get_microposts, xhr: true, params: {}
@@ -17,7 +28,7 @@ RSpec.describe ApiController, type: :controller do
     
     body = JSON.parse(response.body)
     expect(body['status']).to be_truthy
-    expect(body['microposts'].length).to be(10)
+    expect(body['microposts'].length).to eq(10)
   end
   
   it 'post_micropostのテスト' do

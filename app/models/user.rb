@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   has_one  :user_session, dependent: :destroy
-  has_many :micropst    , dependent: :destroy
+  has_many :micropsts   , dependent: :destroy
   has_many :followees, class_name:  'Follow',
                        foreign_key: 'follower_id',
                        dependent: :destroy
