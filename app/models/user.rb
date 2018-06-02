@@ -1,6 +1,13 @@
 class User < ApplicationRecord
-  has_one  :user_session
-  has_many :micropst
+  has_one  :user_session, dependent: :destroy
+  has_many :micropst    , dependent: :destroy
+  has_many :followees, class_name:  'Follow',
+                       foreign_key: 'follower_id',
+                       dependent: :destroy
+  has_many :followers, class_name:  'Follow',
+                       foreign_key: 'followee_id',
+                       dependent: :destroy
+                       
   validates :name, presence: true,
                    length: { maximum: 60 },
                    format: { with: /\A[\-\w]+\z/ },
