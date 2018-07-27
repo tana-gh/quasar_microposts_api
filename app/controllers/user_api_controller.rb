@@ -2,6 +2,9 @@ class UserApiController < ApplicationController
   
   before_action :authenticate, except: [:signup, :login]
   
+  # :user_name - 登録されるUser.name
+  # :password  - パスワード
+  # :password_confirmation - パスワード確認
   def signup
     user_name = params[:user_name]
     password  = params[:password]
@@ -23,6 +26,8 @@ class UserApiController < ApplicationController
     end
   end
   
+  # user_name - ログインされるUser.name
+  # password  - パスワード
   def login
     user_name = params[:user_name]
     password  = params[:password]
@@ -51,6 +56,7 @@ class UserApiController < ApplicationController
     end
   end
   
+  # ログインしているかどうか
   def is_login
     if @user_session.is_in_expires
       render_status(200, true, 'Logined.')

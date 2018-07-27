@@ -1,4 +1,6 @@
 class Follow < ApplicationRecord
+  # :followee_id, :follower_id
+
   belongs_to :followee, class_name: 'User'
   belongs_to :follower, class_name: 'User'
 

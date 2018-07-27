@@ -12,6 +12,7 @@ class FollowApiController < ApplicationController
     render_users(200, true, followers)
   end
 
+  # :user - フォローされるUser
   def follow
     name     = params[:user]
     followee = User.find_by(name: name)
@@ -38,6 +39,7 @@ class FollowApiController < ApplicationController
     end
   end
 
+  # :user - フォローを外されるUser
   def unfollow
     name     = params[:user]
     followee = User.find_by(name: name)

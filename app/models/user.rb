@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  # :name, :password_digest
+  
   has_one  :user_session, dependent: :destroy
   has_many :micropsts   , dependent: :destroy
   has_many :followees, class_name:  'Follow',

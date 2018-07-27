@@ -1,4 +1,6 @@
 class Micropost < ApplicationRecord
+  # :message, :user_id
+
   belongs_to :user
   
   validates :message, presence: true,

@@ -1,4 +1,6 @@
 class UserSession < ApplicationRecord
+  # :token, :user_id, :expires
+
   belongs_to :user
   validates :token,   presence: true, uniqueness: { case_sensitive: true }
   validates :expires, presence: true
