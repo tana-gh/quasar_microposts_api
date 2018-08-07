@@ -40,7 +40,7 @@ class ApiController < ApplicationController
     mp = Micropost.new(message: message, user: user)
     
     if mp.save
-      render_status(200, true, 'OK.')
+      render_microposts(200, true, [mp])
     else
       render_status(400, false, 'Invalid micropost.')
     end

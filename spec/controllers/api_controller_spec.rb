@@ -39,8 +39,7 @@ RSpec.describe ApiController, type: :controller do
     
     body = JSON.parse(response.body)
     expect(body['status']) .to be_truthy
-    expect(body['message']).to be_present
-    expect(Micropost.all[10].message).to eq('test')
+    expect(body['microposts'].length).to eq(1)
   end
   
   it 'post_micropost失敗のテスト' do
