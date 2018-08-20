@@ -20,7 +20,7 @@ class UserApiController < ApplicationController
     end
 
     if save_new_session(user)
-      render_token(200, true, user.user_session.token)
+      render_token(200, true, user.user_session.token, user)
     else
       render_status(401, false, 'Cannot create session.')
     end
@@ -40,7 +40,7 @@ class UserApiController < ApplicationController
     end
 
     if save_new_session(user)
-      render_token(200, true, user.user_session.token)
+      render_token(200, true, user.user_session.token, user)
     else
       render_status(401, false, 'Cannot create session.')
     end
@@ -59,7 +59,7 @@ class UserApiController < ApplicationController
   # ログインしているかどうか
   def is_login
     if @user_session.is_in_expires
-      render_status(200, true, 'Logined.')
+      render_user(200, true, @user_session.user)
     else
       render_status(200, false, 'Not logined.')
     end

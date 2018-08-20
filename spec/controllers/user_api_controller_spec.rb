@@ -34,6 +34,7 @@ RSpec.describe UserApiController, type: :controller do
     body = JSON.parse(response.body)
     expect(body['status']).to be_truthy
     expect(body['token']) .to eq(User.find_by(name: 'signup').user_session.token)
+    expect(body['user'])  .to be_present
   end
   
   it 'サインアップ失敗のテスト' do
@@ -50,6 +51,7 @@ RSpec.describe UserApiController, type: :controller do
     body = JSON.parse(response.body)
     expect(body['status']).to be_truthy
     expect(body['token']) .to eq(User.find_by(name: 'test').user_session.token)
+    expect(body['user'])  .to be_present
   end
   
   it 'ログイン失敗のテスト' do
@@ -87,8 +89,8 @@ RSpec.describe UserApiController, type: :controller do
     post :is_login, xhr: true, params: {}
     expect(response.status).to eq(401)
     body = JSON.parse(response.body)
-    expect(body['status']) .to be_falsy
-    expect(body['message']).to be_present
+    expect(body['status']).to be_falsy
+    expect(body['user'])  .to be_nil
   end
   
   it 'ログイン後is_loginのテスト' do
@@ -102,8 +104,8 @@ RSpec.describe UserApiController, type: :controller do
     post :is_login, xhr: true, params: {}
     expect(response.status).to eq(200)
     body = JSON.parse(response.body)
-    expect(body['status']) .to be_truthy
-    expect(body['message']).to be_present
+    expect(body['status']).to be_truthy
+    expect(body['user'])  .to be_present
   end
   
   it 'ログインログアウト後is_loginのテスト' do

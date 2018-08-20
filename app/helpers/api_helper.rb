@@ -2,9 +2,10 @@ module ApiHelper
   
   private
   
-  def render_token(status, json_status, token)
+  def render_token(status, json_status, token, user)
     @status = json_status
     @token  = token
+    @user   = user
     render 'token', formats: 'json', handlars: 'jbuilder', status: status
   end
   
@@ -12,6 +13,12 @@ module ApiHelper
     @status  = json_status
     @message = message
     render 'status', formats: 'json', handlars: 'jbuilder', status: status
+  end
+
+  def render_user(status, json_status, user)
+    @status = json_status
+    @users  = user
+    render 'user', formats: 'json', handlars: 'jbuilder', status: status
   end
 
   def render_users(status, json_status, users)
