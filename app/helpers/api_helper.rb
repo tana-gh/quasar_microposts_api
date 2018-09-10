@@ -17,7 +17,7 @@ module ApiHelper
 
   def render_user(status, json_status, user)
     @status = json_status
-    @users  = user
+    @user   = user
     render 'user', formats: 'json', handlars: 'jbuilder', status: status
   end
 
