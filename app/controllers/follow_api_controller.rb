@@ -18,7 +18,7 @@ class FollowApiController < ApplicationController
     followee = User.find_by(name: name)
 
     if !followee
-      render_status(401, false, 'Cannot find user.')
+      render_status(400, false, 'Cannot find user.')
       return
     end
 
@@ -26,7 +26,7 @@ class FollowApiController < ApplicationController
     follow   = Follow.find_by(followee: followee, follower: follower)
 
     if follow
-      render_status(401, false, 'Already followed.')
+      render_status(400, false, 'Already followed.')
       return
     end
 
@@ -35,7 +35,7 @@ class FollowApiController < ApplicationController
     if new_follow.save
       render_status(200, true, 'Followed.')
     else
-      render_status(401, false, 'Cannot follow.')
+      render_status(400, false, 'Cannot follow.')
     end
   end
 
@@ -45,7 +45,7 @@ class FollowApiController < ApplicationController
     followee = User.find_by(name: name)
 
     if !followee
-      render_status(401, false, 'Cannot find user.')
+      render_status(400, false, 'Cannot find user.')
       return
     end
 
@@ -53,14 +53,14 @@ class FollowApiController < ApplicationController
     follow   = Follow.find_by(followee: followee, follower: follower)
 
     if !follow
-      render_status(401, false, 'Already unfollowed.')
+      render_status(400, false, 'Already unfollowed.')
       return
     end
 
     if follow.delete
       render_status(200, true, 'Unfollowed.')
     else
-      render_status(401, false, 'Cannot unfollow.')
+      render_status(400, false, 'Cannot unfollow.')
     end
   end
 
